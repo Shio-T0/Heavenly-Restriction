@@ -83,9 +83,9 @@ impl DayList {
                 if session.ensure_started()? {
                     fired.push(session.start_time);
                 }
-                else {
-                    session.mark_stopped();
-                }
+            }
+            else {
+                session.mark_stopped();
             }
         }
         Ok(fired)

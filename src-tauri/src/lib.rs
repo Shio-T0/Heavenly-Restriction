@@ -17,16 +17,16 @@ pub fn run() {
       }
       let handle = app.handle().clone();
       thread::spawn(move || loop {
-          println!("running background Thread");
-          let state = handle.state::<Mutex<DayList>>();
-          let mut daylist = state.lock().unwrap();
-          match daylist.tick(Local::now().time()) {
-              Ok(fired) => for id in fired {
-                  println!("running: {}", id);
-                  use tauri::Emitter;
-                  let _ = handle.emit("Session Started", id.to_string());
+          {
+              let state = handle.state::<Mutex<DayList>>();
+              let mut daylist = state.lock().unwrap();
+              match daylist.tick(Local::now().time()) {
+                  Ok(fired) => for id in fired {
+                      use tauri::Emitter;
+                      let _ = handle.emit("Session Started", id.to_string());
+                  }
+                  Err(e) => log::error!("[Error] scheduler tick failed_ {e}"),
               }
-              Err(e) => log::error!("[Error] scheduler tick failed_ {e}"),
           }
           thread::sleep(Duration::from_secs(1));
       });
@@ -50,14 +50,13 @@ pub struct SessionConfig {
 }
 
 #[tauri::command]
-fn set_sessions(configs: Vec<SessionConfig>, daylist: tauri::State<'_, Mutex<DayList>>) -> Result<(), String> {
+fn set_sessions(sessions: Vec<SessionConfig>, daylist: tauri::State<'_, Mutex<DayList>>) -> Result<(), String> {
     let mut daylist = daylist.lock().map_err(|e| e.to_string())?;
-    let ids: HashSet<String> = configs.iter().map(|config| config.id.clone()).collect();
-    println!("Currently Available Ids: {:#?}", ids);
+    let ids: HashSet<String> = sessions.iter().map(|config| config.id.clone()).collect();
     
     daylist.update_available(ids);
 
-    for config in configs {
+    for config in sessions {
         daylist.replace(config.id, ExecList::from_lines(config.commands), Time(config.start_minutes), config.is_blocking);
     }
 
