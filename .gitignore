@@ -7,7 +7,7 @@ frontend/dist
 frontend/dist-ssr
 *.local
 
-/target/
+/*target/
 /gen/schemas
 
 # Editor directories and files
