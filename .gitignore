@@ -1,4 +1,22 @@
+# Logs
+logs
+*.log*
 
-./target
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+*.local
 
+/target/
+/gen/schemas
 
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
