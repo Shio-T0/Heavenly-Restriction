@@ -4,6 +4,7 @@ use std::{collections::HashSet, io};
 mod session;
 mod exec_list;
 mod program;
+mod workspace;
 
 pub use session::{Session, Time};
 pub use exec_list::ExecList;
