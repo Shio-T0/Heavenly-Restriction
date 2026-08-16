@@ -69,7 +69,7 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "computer-controler",
+ "computer-controller",
  "log",
  "serde",
  "serde_json",
@@ -365,7 +365,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "computer-controler"
+name = "computer-controller"
 version = "0.1.0"
 dependencies = [
  "chrono",
