@@ -45,7 +45,6 @@ fn try_get_socket_path() -> io::Result<String> {
     }
 }
 fn get_display_args(s: &str) -> (&str, &str, &str) {
-    // TODO Possible and need handling: :0.0
     let mut args: Vec<&str> = s.split(|c: char| [':', '.'].contains(&c)).collect();
     if s.chars().nth(0).unwrap() == ':' {
         args.insert(0, "");
@@ -71,6 +70,16 @@ fn bspc_keep_subscribed() -> io::Result<JoinHandle<io::Result<()>>> {
     }});
     
     Ok(handle)
+}
+
+// Returns io::ErrorKind::InvalidData in canse from_str_radix does not work
+pub fn parse_id(id: &str) -> io::Result<u32> {
+    let id = u32::from_str_radix(id, 16);
+    match id {
+        Ok(id) => Ok(id),
+        Err(e) =>  return Err(io::Error::new(io::ErrorKind::InvalidData, e)),
+    }
+
 }
 
 
